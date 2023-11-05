@@ -3,6 +3,7 @@ Database Model:
 - Custom User Model.
 """
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -51,3 +52,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Recipe(models.Model):
+    """The Recipe Model."""
+    
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    time_minutes = models.IntegerField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    link = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
