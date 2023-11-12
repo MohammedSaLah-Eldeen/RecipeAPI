@@ -111,10 +111,10 @@ class PrivateRecipeApiTest(TestCase):
         # to create a recipe, we test creating one
         # through a serializer.
         payload = {
-            'title': 'daasdfafs',
+            'title': 'rge',
             'time_minutes': 45,
             'price': Decimal('5')
         }
         res = self.client.post(RECIPE_URL, payload)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
