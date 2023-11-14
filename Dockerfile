@@ -12,9 +12,9 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /.api && \
     /.api/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache postgresql-client jpeg-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev && \
+        build-base postgresql-dev musl-dev zlib zlib-dev && \
     /.api/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
        then /.api/bin/pip install -r /tmp/requirements.dev.txt ; \
@@ -24,7 +24,11 @@ RUN python -m venv /.api && \
     adduser \
         --disabled-password \
         --no-create-home \
-        apiuser
+        apiuser && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R apiuser:apiuser /vol && \
+    chmod -R 755 /vol
 
 ENV PATH="/.api/bin:$PATH"
 USER apiuser

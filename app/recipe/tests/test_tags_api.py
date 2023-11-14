@@ -13,13 +13,17 @@ from recipe.serializers import TagSerializer
 
 TAGS_URL = reverse("recipe:tag-list")
 
+
 def detail_url(tag_id):
     """returns tag detail URL."""
     return reverse("recipe:tag-detail", args=[tag_id])
 
-def create_user(email='test@example.com', password='testpass123', name='example'):
+
+def create_user(email="test@example.com", password="testpass123", name="example"):
     """creates and returns a user."""
-    return get_user_model().objects.create_user(email=email, password=password, name=name)
+    return get_user_model().objects.create_user(
+        email=email, password=password, name=name
+    )
 
 
 class PublicTagsApiTests(TestCase):
@@ -49,7 +53,7 @@ class PrivateTagsApiTests(TestCase):
         Tag.objects.create(user=self.user, name="easy")
 
         res = self.client.get(TAGS_URL)
-        tags = Tag.objects.all().order_by('-name')
+        tags = Tag.objects.all().order_by("-name")
         serializer = TagSerializer(tags, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -57,7 +61,9 @@ class PrivateTagsApiTests(TestCase):
 
     def test_tags_limited_to_user(self):
         """tests tags returned are for authenticated user."""
-        user2 = create_user(email="test2@example.com", password="testpass123", name='test2')
+        user2 = create_user(
+            email="test2@example.com", password="testpass123", name="test2"
+        )
         Tag.objects.create(user=user2, name="comfort-food")
         tag = Tag.objects.create(user=self.user, name="vegan")
 
@@ -66,12 +72,3 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]["name"], tag.name)
-
-
-
-
-    
-
-    
-
-        

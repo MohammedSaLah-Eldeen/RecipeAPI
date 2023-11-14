@@ -14,15 +14,11 @@ class AdminSiteTests(TestCase):
         """create user and Client."""
         self.client = Client()
         self.admin_user = get_user_model().objects.create_superuser(
-            email='admin@example.com',
-            name='adminstrator',
-            password='testadmin123'
+            email="admin@example.com", name="adminstrator", password="testadmin123"
         )
         self.client.force_login(self.admin_user)
         self.user = get_user_model().objects.create_user(
-            email='user@example.com',
-            name='normalUser',
-            password='testnormaluser123'
+            email="user@example.com", name="normalUser", password="testnormaluser123"
         )
 
     def test_user_list(self):
@@ -30,7 +26,7 @@ class AdminSiteTests(TestCase):
 
         # more info regarding the views that the Django admin
         # and how to access them is in the docs
-        url = reverse('admin:core_user_changelist')
+        url = reverse("admin:core_user_changelist")
         res = self.client.get(url)
 
         self.assertContains(res, self.user.name)
@@ -38,14 +34,14 @@ class AdminSiteTests(TestCase):
 
     def test_edit_user_page(self):
         """tests that users can be edited."""
-        url = reverse('admin:core_user_change', args=(self.user.id,))
+        url = reverse("admin:core_user_change", args=(self.user.id,))
         res = self.client.get(url)
 
         self.assertEqual(res.status_code, 200)
 
     def test_create_user_page(self):
         """tests that users can be created with the admin panel."""
-        url = reverse('admin:core_user_add')
+        url = reverse("admin:core_user_add")
         res = self.client.get(url)
 
         self.assertEqual(res.status_code, 200)
