@@ -7,11 +7,32 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from drf_spectacular.utils import (
+    extend_schema_view,
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes
+)
 
 from core.models import *
 from recipe.serializers import *
 
-
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                'tags',
+                OpenApiTypes.STR,
+                description='csv of tags'
+            ),
+            OpenApiParameter(
+                'ingredients',
+                OpenApiTypes.STR,
+                description='csv of ingredients'
+            )
+        ]
+    )
+)
 class RecipeViewSet(viewsets.ModelViewSet):
     """Defines basic views for the recipe endpoint."""
 
@@ -24,8 +45,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """
         modifies the default behaviour of getting all recipes
         to only recipes of the authenticated user.
+        and filtering
         """
-        return self.queryset.filter(user=self.request.user).order_by("-id")
+        tags = self.request.query_params.get('tags')
+        ingredients = self.request.query_params.get('ingredients')
+        queryset = self.queryset
+
+        if tags:
+            tag_names = tags.split(',')
+            queryset = queryset.filter(tags__name__in=tag_names)
+
+        if ingredients:
+            ingredient_names = ingredients.split(',')
+            queryset = queryset.filter(ingredients__name__in=ingredient_names)
+        
+        return queryset.filter(
+            user=self.request.user
+        ).order_by('-id').distinct()
+        
 
     def get_serializer_class(self):
         """returns the needed serializer by default uses the one with description."""
