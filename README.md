@@ -1,11 +1,11 @@
 [![Checks](https://github.com/MohammedSaLah-Eldeen/recipe-app-api/actions/workflows/checks.yml/badge.svg)](https://github.com/MohammedSaLah-Eldeen/recipe-app-api/actions/workflows/checks.yml)
 
 # recipe-app-api
-Recipe API App. Fully functional backend API that could be used with a frontend to create a recipe app or a website
+Recipe API App. Fully functional backend API that could be used with a frontend to create a recipe app or a website.
 
 ## Implmentation
 Docker Containers were used mainly in the development along with docker compose to building the app starting it and such on. <br>
-PostgreSQL is the default database for this project instead of sqlite that comes as a default with django <br>.
+PostgreSQL is the default database for this project instead of sqlite that comes as a default with django. <br>
 
 * to build the application `docker compose build`
 * to run the application `docker compose up`
@@ -14,14 +14,14 @@ the --rm will make sure to remove the container after the command has been execu
 
 check
 * `Dockerfile`
-* `docker-compose.yml`
+* `docker-compose.yml` <br>
 to understand more about how the image was built and the different used services in docker compose.
 
 ### Apps
 This API consists of 3 main Apps: <br>
 
 #### core
-features but limited to:
+features but not limited to:
 * the management command `wait_for_db` that checks whether database container is running to start the connection.
 * a custom user model. 
 * a custom admin interface for the User model.
@@ -29,10 +29,16 @@ features but limited to:
 * all database models tests functionality.
 
 #### user
-features but limited to:
+features but not limited to:
 * uses API tokens to handle Authentication with the help of the django rest franework `ObtainAuthToken` class that uses the `AuthTokenSerializer` for serialization.
 * uses django rest framework `generics.CreateAPIView` to accept POST requests for signing up with the correct input information uses the `UserSerializer` with the help of the django rest framework `ModelSerializer`.
 * also users can view and update their information with the `ManageUserView` that uses `generics.RetrieveUpdateAPIView` to allow for GET, PUT and PATCH requests, still uses the `UserSerializer`.
+
+#### recipe
+features but not limited to:
+* List all user's created recipes and retrieve them, filtering could be applied with tags or ingredients.
+* users can also upload an image to a recipe with the custom action `upload_image`
+* using the nested serializer `RecipeSerializer` with the custom creating actions that makes it possible to make POST request with serializers inside serializers.
 
 ## API DOCS
 Head to /api/docs to view the Swagger API Documentation, <br>
